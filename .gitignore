@@ -1,0 +1,4 @@
+target
+*.tox
+libtoxcore.log
+.swp

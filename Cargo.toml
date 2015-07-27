@@ -1,0 +1,17 @@
+[package]
+name = "tox-rust-neurological-warfare-bot"
+version = "0.0.0"
+authors = ["Zetok Zalbavar <zetok@openmailbox.org>"]
+
+
+
+
+[dependencies.rstox]
+git = "https://github.com/suhr/rstox.git"
+
+
+[dependencies.rand]
+rand = "0.3"
+
+[dependencies.chrono]
+chrono = "0.2"
