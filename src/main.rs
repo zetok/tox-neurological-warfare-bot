@@ -107,28 +107,31 @@ fn on_friend_message(tox: &mut Tox, fnum: u32, msg: String, bot: &mut Bot) {
         rand_string((1372.0 * bot.random.gen::<f64>()) as usize, &mut bot.random)
     };
 
-    if &msg == "stop" {
-        for f in 0..bot.spam.len() {
-            if bot.spam[f] == fnum {
-                drop(bot.spam.remove(f));
+    match &*msg {
+        "id" | "ID" => {
+            let message = format!("My ID: {}", tox.get_address());
+            drop(tox.send_friend_message(fnum, MessageType::Normal, &message));
+        },
+
+        "start" => {
+            bot.spam.push(fnum);
+            println!("Friend {} added to spam list.", fnum);
+        },
+
+        "stop" => {
+            for f in 0..bot.spam.len() {
+                if bot.spam[f] == fnum {
+                    drop(bot.spam.remove(f));
+                    println!("Friend {} removed from spam list.", fnum);
+                }
             }
-        }
-    } else if &msg == "id" {
-        let message = format!("My ID: {}", tox.get_address());
-        drop(tox.send_friend_message(fnum, MessageType::Normal, &message));
-    } else {
-        drop(tox.send_friend_message(fnum, MessageType::Normal, &reply_msg));
-    }
+        },
 
-    if &msg == "start" {
-        bot.spam.push(fnum);
-        println!("Friend {} added to spam list.", fnum);
+        _ => drop(tox.send_friend_message(fnum, MessageType::Normal,
+                &reply_msg)),
     }
-
 }
 
-   // let message: String = unsafe {
-   //     rand_string((1372.0 * rand.gen::<f64>()) as usize, rand) };
 
 fn main() {
     /*
