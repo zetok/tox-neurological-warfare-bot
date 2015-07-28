@@ -22,7 +22,7 @@ Launch and message it to receive spam.
 To receive constant stream of spam, use command to trigger it.
 
 
-Currently supported by Lee commands are:
+Currently supported by bot commands are:
 
 ## Friend commands
 
