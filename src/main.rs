@@ -116,6 +116,8 @@ fn on_friend_message(tox: &mut Tox, fnum: u32, msg: String, bot: &mut Bot) {
         "start" => {
             bot.spam.push(fnum);
             println!("Friend {} added to spam list.", fnum);
+            println!("Spam list has {} friend(s): {:?}", bot.spam.len(),
+                                                         bot.spam);
         },
 
         "stop" => {
@@ -123,6 +125,8 @@ fn on_friend_message(tox: &mut Tox, fnum: u32, msg: String, bot: &mut Bot) {
                 if bot.spam[f] == fnum {
                     drop(bot.spam.remove(f));
                     println!("Friend {} removed from spam list.", fnum);
+                    println!("Spam list has {} friend(s): {:?}", bot.spam.len(),
+                                                                 bot.spam);
                 }
             }
         },
@@ -139,9 +143,12 @@ fn main() {
         new Tox instance.
     */
     let data = match for_files::load_save("bot.tox") {
-        Ok(d) => Some(d),
+        Ok(d) => {
+            println!("\nSave data loaded.\n");
+            Some(d)
+        },
         Err(e) => {
-            println!("\nError loading save: {}", e);
+            println!("\nError loading save: {}\n", e);
             None
         },
     };
@@ -204,7 +211,7 @@ fn main() {
             };
 
             drop(tox.send_friend_message(*fnum, MessageType::Normal, &msg));
-            // ↓ be ready to send message to next friend on the list
+            // ↓ be ready to send message to the next friend on the list
             tox.tick();
         }
 
@@ -219,7 +226,7 @@ fn main() {
         let cur_time = UTC::now().timestamp();
         if bot.last_save + 64 < cur_time {
             match for_files::write_save("bot.tox", tox.save()) {
-                Ok(_) => println!("\nFile saved."),
+                Ok(_) => println!("File saved."),
                 Err(e) => println!("\nFailed to save file: {}", e),
             }
             bot.last_save = cur_time;
