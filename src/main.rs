@@ -113,6 +113,13 @@ fn on_friend_message(tox: &mut Tox, fnum: u32, msg: String, bot: &mut Bot) {
             drop(tox.send_friend_message(fnum, MessageType::Normal, &message));
         },
 
+        /*
+            `start` should append friend to spamlist, regardless of whether
+            they are already on it.
+
+            Adding multiple entries of friend increases speed at which spam
+            is being sent to friend.
+        */
         "start" => {
             bot.spam.push(fnum);
             println!("Friend {} added to spam list.", fnum);
@@ -120,13 +127,32 @@ fn on_friend_message(tox: &mut Tox, fnum: u32, msg: String, bot: &mut Bot) {
                                                          bot.spam);
         },
 
+        /*
+            `stop` should remove all entries of a given friend from spamlist
+        */
         "stop" => {
-            for f in 0..bot.spam.len() {
-                if bot.spam[f] == fnum {
-                    drop(bot.spam.remove(f));
-                    println!("Friend {} removed from spam list.", fnum);
-                    println!("Spam list has {} friend(s): {:?}", bot.spam.len(),
-                                                                 bot.spam);
+            let mut removed: bool = false;
+            // loop is needed to ensure that list is fully iterated through
+            while !removed {
+                // end loop if condition isn't met
+                removed = true;
+                for f in 0..bot.spam.len() {
+                    if bot.spam[f] == fnum {
+                        // loop again if condition has been met
+                        removed = false;
+
+                        // actual work
+                        drop(bot.spam.remove(f));
+                        println!("Friend {} removed from spam list.", fnum);
+                        println!("Spam list now has {} friend(s): {:?}",
+                                bot.spam.len(),
+                                bot.spam);
+
+                        // break iterator after removing part of it, without
+                        // that bug of `index out of bounds` would be
+                        // triggered (due to relying on `len()` of old vector)
+                        break;
+                    }
                 }
             }
         },

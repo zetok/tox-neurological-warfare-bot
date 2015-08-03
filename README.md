@@ -2,6 +2,10 @@ This is a spambot for Tox. It's the best `;)`
 
 More features may come along the way `:)`
 
+Any contributions are welcome.
+
+Tox ID of a running bot: `C7719C6808C14B77348004956D1D98046CE09A34370E7608150EAD74C3815D30C8BA3AB9BEB9`
+
 # Features
 
 * spam for 1-on-1 chats
@@ -34,6 +38,7 @@ Currently supported by bot commands are:
 | start | Start continously sending spam |
 | stop | Stop continous spam |
 
+Sending `start` multiple times increases speed at which bot sends spam.
 
 
 # License
